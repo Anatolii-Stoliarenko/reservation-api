@@ -12,9 +12,12 @@ const reservationsFilePath = path.join(__dirname, "reservations.json"); // Path 
 const usersFilePath = path.join(__dirname, "users.json"); // Path to your users file
 
 // Middleware
-app.use(cors()); // Use CORS middleware
+app.use(
+  cors({
+    origin: ["http://localhost:4200", "https://reserv-seven.vercel.app"],
+  })
+); // Use CORS middleware
 app.use(bodyParser.json());
-
 
 // Load all reservations
 app.get("/reservations", (req, res) => {
