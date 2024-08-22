@@ -15,7 +15,7 @@ router.get("/", async (req, res) => {
 });
 
 // Save all reservations (overwrite)
-router.post("/", async (req, res) => {
+router.post("/save", async (req, res) => {
   try {
     const reservations = req.body;
 
@@ -32,6 +32,23 @@ router.post("/", async (req, res) => {
   } catch (err) {
     console.error("Error saving reservations:", err);
     res.status(500).json({ error: "Could not save reservations" });
+  }
+});
+
+//Save one reservation
+router.post("/", async (req, res) => {
+  try {
+    const reservationData = req.body;
+    const newReservation = new Reservation(reservationData);
+    await newReservation.save();
+
+    res.status(201).json({
+      message: "Reservation saved successfully",
+      reservation: newReservation,
+    });
+  } catch (err) {
+    console.error("Error saving reservation:", err);
+    res.status(500).json({ error: "Could not save reservation" });
   }
 });
 
