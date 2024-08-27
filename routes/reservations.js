@@ -1,6 +1,5 @@
 const express = require("express");
 const Reservation = require("../models/Reservation");
-
 const router = express.Router();
 
 // Get all reservations
