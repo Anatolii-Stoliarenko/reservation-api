@@ -6,14 +6,26 @@ const router = express.Router();
 router.get("/", async (req, res) => {
   try {
     const reservations = await Reservation.find();
-    res.json(reservations);
+
+    // Transform the reservations to include `id` as a copy of `_id`
+    const transformedReservations = reservations.map((reservation) => ({
+      ...reservation.toObject(),
+      id: reservation._id, // Add id field as a copy of _id
+      _id: undefined, // Optionally, remove _id if you don't need it in the response
+    }));
+
+    // Send the transformed reservations as the response
+    res.json({
+      message: "Successfully downloaded reservations",
+      reservations: transformedReservations, // Wrap the array in a field
+    });
   } catch (err) {
     console.error("Error fetching reservations:", err);
     res.status(500).json({ error: "Could not fetch reservations" });
   }
 });
 
-//Add one reservation
+//Add new reservation
 router.post("/", async (req, res) => {
   try {
     const reservationData = req.body;
@@ -29,17 +41,17 @@ router.post("/", async (req, res) => {
   }
 });
 
-//Update reservation by id from front-end
+// Update reservation by MongoDB _id
 router.patch("/:id", async (req, res) => {
   try {
-    const reservationId = req.params.id; // Use the custom id passed in the URL
-    const updatedData = req.body;
+    const reservationId = req.params.id; // MongoDB _id from the URL
+    const updatedData = req.body; // Data to update the reservation with
 
-    // Find the reservation by the custom id field instead of _id
-    const updatedReservation = await Reservation.findOneAndUpdate(
-      { id: reservationId }, // Search by the custom id field
-      { $set: updatedData },
-      { new: true, runValidators: true }
+    // Find the reservation by _id and update it with the new data
+    const updatedReservation = await Reservation.findByIdAndUpdate(
+      reservationId,
+      { $set: updatedData }, // Update only the fields provided in updatedData
+      { new: true, runValidators: true } // Options: return the updated document, run schema validators
     );
 
     if (!updatedReservation) {
@@ -48,6 +60,7 @@ router.patch("/:id", async (req, res) => {
 
     res.status(200).json({
       message: "Reservation updated successfully",
+      reservation: updatedReservation, // Optionally return the updated reservation
     });
   } catch (err) {
     console.error("Error updating reservation:", err);
@@ -55,15 +68,13 @@ router.patch("/:id", async (req, res) => {
   }
 });
 
-//Delite reservation by id from front-end
+//Delete reservation by id from front-end
 router.delete("/:id", async (req, res) => {
   try {
     const reservationId = req.params.id; // Use the custom id passed in the URL
-
-    // Find the reservation by the custom id field and delete it
-    const deletedReservation = await Reservation.findOneAndDelete({
-      id: reservationId,
-    });
+    const deletedReservation = await Reservation.findOneAndDelete(
+      reservationId
+    );
 
     if (!deletedReservation) {
       return res.status(404).json({ error: "Reservation not found" });
