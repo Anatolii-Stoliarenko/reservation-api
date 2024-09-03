@@ -71,17 +71,17 @@ router.patch("/:id", async (req, res) => {
 //Delete reservation by id from front-end
 router.delete("/:id", async (req, res) => {
   try {
-    const reservationId = req.params.id; // Use the custom id passed in the URL
-    const deletedReservation = await Reservation.findOneAndDelete(
-      reservationId
-    );
+    const reservationID = req.params.id; // Use the custom id passed in the URL
+    const deletedReservation = await Reservation.findOneAndDelete({
+      _id: reservationID,
+    });
 
     if (!deletedReservation) {
       return res.status(404).json({ error: "Reservation not found" });
     }
 
     res.status(200).json({
-      message: "Reservation deleted successfully",
+      message: `Reservation id: ${reservationID} deleted successfully`,
     });
   } catch (err) {
     console.error("Error deleting reservation:", err);
