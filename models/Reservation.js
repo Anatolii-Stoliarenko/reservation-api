@@ -27,7 +27,7 @@ const reservationSchema = new mongoose.Schema({
   },
   type: {
     type: String,
-    enum: ["Polish", "Ukrainian", "Other"],
+    enum: ["PL", "UA", "Other"],
     default: "Other",
   },
   user: {
