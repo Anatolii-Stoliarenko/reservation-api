@@ -2,10 +2,6 @@ const mongoose = require("mongoose");
 const User = require("./User");
 
 const reservationSchema = new mongoose.Schema({
-  // id: {
-  //   type: String,
-  //   required: true,
-  // },
   date: {
     type: String, // 'yyyy-MM-dd' format
     required: true,
@@ -28,6 +24,11 @@ const reservationSchema = new mongoose.Schema({
       "Harcówka",
     ],
     required: true,
+  },
+  type: {
+    type: String,
+    enum: ["Polish", "Ukrainian", "Other"],
+    default: "Other",
   },
   user: {
     id: {
@@ -67,9 +68,9 @@ const reservationSchema = new mongoose.Schema({
 });
 
 // Update the updatedAt field before saving
-// userSchema.pre("save", function (next) {
-//   this.updatedAt = Date.now();
-//   next();
-// });
+reservationSchema.pre("save", function (next) {
+  this.updatedAt = Date.now();
+  next();
+});
 
 module.exports = mongoose.model("Reservation", reservationSchema);

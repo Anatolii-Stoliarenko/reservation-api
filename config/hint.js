@@ -5,8 +5,8 @@ connectDB().then(async () => {
 
   try {
     const result = await User.updateOne(
-      { email: "admin@gmail.com" }, // Replace with the actual email
-      { $set: { role: "admin" } }
+      { email: "moderator@gmail.com" }, // Replace with the actual email
+      { $set: { role: "moderator" } }
     );
     console.log("User role updated:", result);
   } catch (err) {

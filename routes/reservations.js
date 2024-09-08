@@ -6,8 +6,6 @@ const router = express.Router();
 router.get("/", async (req, res) => {
   try {
     const reservations = await Reservation.find();
-
-    // Transform the reservations to include `id` as a copy of `_id`
     const transformedReservations = reservations.map((reservation) => ({
       ...reservation.toObject(),
       id: reservation._id, // Add id field as a copy of _id
