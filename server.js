@@ -19,7 +19,11 @@ connectDB();
 // Middleware
 app.use(
   cors({
-    origin: ["http://localhost:4200", "https://reserv-seven.vercel.app"],
+    origin: [
+      "http://localhost:4200",
+      "https://reserv-seven.vercel.app",
+      "https://foksal.vercel.app",
+    ],
   })
 );
 app.use(bodyParser.json());
